@@ -1,10 +1,12 @@
+import { NextResponse } from 'next/server.js';
+
 const { db } = require('@vercel/postgres');
 const {
   invoices,
   customers,
   revenue,
   users,
-} = require('../app/lib/placeholder-data.js');
+} = require('../../lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
 async function seedUsers(client) {
@@ -160,8 +162,11 @@ async function seedRevenue(client) {
   }
 }
 
-async function main() {
+export async function POST() {
+  console.log("test1")
   const client = await db.connect();
+
+  console.log("test2")
 
   await seedUsers(client);
   await seedCustomers(client);
@@ -169,11 +174,6 @@ async function main() {
   await seedRevenue(client);
 
   await client.end();
-}
 
-main().catch((err) => {
-  console.error(
-    'An error occurred while attempting to seed the database:',
-    err,
-  );
-});
+  return NextResponse.json({data: "OK"})
+}
